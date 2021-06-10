@@ -1,16 +1,18 @@
 package com.sphtechapp.myapplicationsph.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.sphtechapp.myapplicationsph.MainCoroutineRule
-import com.sphtechapp.myapplicationsph.repositories.FakeDataUsageRepository
 import com.google.common.truth.Truth.assertThat
+import com.sphtechapp.myapplicationsph.MainCoroutineRule
 import com.sphtechapp.myapplicationsph.data.remote.responses.RecordsData
 import com.sphtechapp.myapplicationsph.getOrAwaitValueTest
 import com.sphtechapp.myapplicationsph.other.Status
+import com.sphtechapp.myapplicationsph.repositories.FakeDataUsageRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
 
 @ExperimentalCoroutinesApi
 class DataUsageViewModelTest {
@@ -23,6 +25,7 @@ class DataUsageViewModelTest {
 
     private lateinit var viewModel1: DataUsageViewModel
     private lateinit var viewModel2: DataUsageViewModel
+    private val viewModel3 = Mockito.mock(DataUsageViewModel::class.java)
 
     private lateinit var fakeDataUsageRepository1: FakeDataUsageRepository
     private lateinit var fakeDataUsageRepository2: FakeDataUsageRepository
@@ -87,10 +90,18 @@ class DataUsageViewModelTest {
     }
 
     @Test
-    fun `fetch filter items`() {
+    fun `fetch filtered items`() {
+        viewModel3.fromYear = 2008
+        viewModel3.toYear = 2020
         val dataUsageItem1 = RecordsData(1,"1.00001", "2016-Q1")
-        val dataUsageItem2 = RecordsData(2,"1.20001", "2016-Q2")
-        viewModel2.filterData(arrayListOf(dataUsageItem1, dataUsageItem2))
+        val dataUsageItem2 = RecordsData(2,"1.20001", "2019-Q2")
+        val allDataArray = arrayListOf(dataUsageItem1, dataUsageItem2)
+        val filteredData = viewModel3.filterData(allDataArray)
+        Assert.assertEquals( 2, filteredData.size)
+        Assert.assertEquals( 2016, filteredData[0].year)
+        val groupData = viewModel3.groupData(allDataArray)
+        Assert.assertEquals( 2, groupData.size)
+        Assert.assertEquals( 1, groupData[2016]?.id)
     }
 }
 

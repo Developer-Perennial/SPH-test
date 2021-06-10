@@ -1,14 +1,15 @@
 package com.sphtechapp.myapplicationsph.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.sphtechapp.myapplicationsph.R
 import com.sphtechapp.myapplicationsph.data.remote.responses.RecordsData
 import com.sphtechapp.myapplicationsph.databinding.ActivityMainBinding
 import com.sphtechapp.myapplicationsph.other.EventObserver
+import com.sphtechapp.myapplicationsph.other.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,11 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpList() {
         val rvAdapter = DataUsageListAdapter(dataUsageData) {
-            Toast.makeText(
-                applicationContext,
-                getString(R.string.volume_down, it.quarter, it.year),
-                Toast.LENGTH_LONG
-            ).show()
+            Snackbar.make(dataBinding.root, getString(R.string.volume_down, it.quarter, it.year), Snackbar.LENGTH_LONG).show()
         }
         dataBinding.rvDataUsageList.adapter = rvAdapter
     }
@@ -59,12 +56,21 @@ class MainActivity : AppCompatActivity() {
         viewModel.dataUsageResponse.observe(
             this,
             EventObserver { recordAPIDataList ->
-                loadAdapter(recordAPIDataList.data?.result?.records)
+                println(recordAPIDataList.status)
+                when {
+                    recordAPIDataList.status == Status.ERROR -> {
+                        viewModel.dataLoading.set(false)
+                        Snackbar.make(dataBinding.root, getString(R.string.data_loading_failed), Snackbar.LENGTH_LONG).show()
+                    }
+                    recordAPIDataList.status == Status.SUCCESS -> {
+                        loadAdapter(recordAPIDataList.data?.result?.records)
+                    }
+                }
             })
     }
 
     private fun loadAdapter(dbDataList: List<RecordsData>?) {
-        dataUsageData.putAll(viewModel.filterData(dbDataList))
+        dataUsageData.putAll(viewModel.groupData(viewModel.filterData(dbDataList)))
         dataBinding.rvDataUsageList.adapter?.notifyDataSetChanged()
         viewModel.dataLoading.set(false)
     }

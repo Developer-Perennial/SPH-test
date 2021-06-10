@@ -10,6 +10,5 @@ import com.sphtechapp.myapplicationsph.data.remote.responses.RecordsData
     exportSchema = false
 )
 abstract class DataUsageItemDatabase : RoomDatabase() {
-
     abstract fun dataUsageDao(): DataUsageDao
 }

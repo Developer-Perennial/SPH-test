@@ -14,15 +14,13 @@ import com.sphtechapp.myapplicationsph.other.Resource
 import com.sphtechapp.myapplicationsph.repositories.DataUsageRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.collections.ArrayList
 
-class DataUsageViewModel @ViewModelInject constructor(
+open class DataUsageViewModel @ViewModelInject constructor(
     private val repository: DataUsageRepository
 ) : ViewModel() {
 
-    private val fromYear = 2008
-    private val toYear = 2018
+    var fromYear = 2008
+    var toYear = 2018
 
     private val _dataLoading: ObservableField<Boolean> = ObservableField()
     val dataLoading: ObservableField<Boolean> = _dataLoading
@@ -44,7 +42,6 @@ class DataUsageViewModel @ViewModelInject constructor(
     fun fetchDataUsageItemFromDb() = GlobalScope.launch {
         _dataLoading.set(true)
         val dataItems = repository.fetchDataUsageItems()
-        println("dataItems ${dataItems.size}")
         _fetchDataUsageItemStatus.postValue(Event(Resource.success(dataItems)))
     }
 
@@ -54,11 +51,11 @@ class DataUsageViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val response = repository.fetchDataUsage(Constants.RESOURCE_ID)
             _dataUsageResponse.value = Event(response)
-            filterData(response.data?.result?.records)
+            insertDataUsageItemIntoDb(filterData(response.data?.result?.records))
         }
     }
 
-    fun filterData(arrayList: List<RecordsData>?): Map<Int, RecordsData> {
+    fun filterData(arrayList: List<RecordsData>?): List<RecordsData> {
         val filterArrayList = ArrayList<RecordsData>()
         var lastYear = 0
         var lastVolumeOfMobileData = 0.0
@@ -76,6 +73,11 @@ class DataUsageViewModel @ViewModelInject constructor(
                 filterArrayList.add(it)
             }
         }
+
+        return filterArrayList
+    }
+
+    fun groupData(filterArrayList: List<RecordsData>): Map<Int, RecordsData> {
         insertDataUsageItemIntoDb(filterArrayList)
         return filterArrayList.groupingBy(RecordsData::year)
             .aggregate { _, accumulator: RecordsData?, element: RecordsData, _ ->
