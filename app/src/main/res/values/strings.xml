@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Application New SPH</string>
+    <string name="volume_down">"Volume was down in %s of %d"</string>
+</resources>
