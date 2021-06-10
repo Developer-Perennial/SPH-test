@@ -2,6 +2,19 @@
 ## Functionality
 The app displays the data usage from year 2008 to 2018.
 
+###Project Structure
+ #### data 
+ local - Contains local database implementations
+ remote - Contains api implementations
+ #### di 
+ Contains AppModule class for DI
+ #### other 
+ Contains Constants, Event - for data events, Resource - for response creations
+ #### repositories 
+ Contains repository implementation for data access
+ #### ui 
+ Contains MainActivity - to display UI, DataUsageViewModel - viewmodel connected to MainActivity, DataUsageListAdapter - adapter for displaying list items
+
 ### HomePage
 Allows you to see the data consumption yearly. When there is a drop in usage in the quarter of the year, a image will be displayed to highlight the same.
 Each result from api is kept in the database in records_data table where the list of year data quarterly stored. Each time an api is called, the same RecordsData record in the Database is updated with the new list of repository ids.
