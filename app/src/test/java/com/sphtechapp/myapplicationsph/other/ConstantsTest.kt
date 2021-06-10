@@ -14,7 +14,5 @@ class ConstantsTest {
     fun testValues() {
         assertEquals("data_usage_db", Constants.DATABASE_NAME)
         assertEquals("https://data.gov.sg/", Constants.BASE_URL)
-        assertEquals(20, Constants.MAX_NAME_LENGTH)
-        assertEquals(10, Constants.MAX_PRICE_LENGTH)
     }
 }
