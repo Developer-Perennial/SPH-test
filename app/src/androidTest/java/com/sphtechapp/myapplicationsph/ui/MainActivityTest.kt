@@ -17,7 +17,6 @@ import androidx.test.runner.AndroidJUnit4
 import com.sphtechapp.myapplicationsph.R
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,7 +34,8 @@ class MainActivityTest {
     fun mainActivityTest() {
         Thread.sleep(8000)
         onView(
-            withId(R.id.rvDataUsageList)).check(matches(isDisplayed()))
+            withId(R.id.rvDataUsageList)
+        ).check(matches(isDisplayed()))
 
         onView(withId(R.id.rvDataUsageList))
             .check(matches(atPosition(0, hasDescendant(withText("2008")))))
@@ -55,7 +55,18 @@ class MainActivityTest {
         onView(withId(R.id.rvDataUsageList))
             .check(matches(atPosition(3, hasDescendant(withId(R.id.ivDecreased)))))
 
-        onView(withId(R.id.rvDataUsageList)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(3, clickOnViewChild(R.id.ivDecreased)))
+        onView(withId(R.id.rvDataUsageList)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                3,
+                clickOnViewChild(R.id.ivDecreased)
+            )
+        )
+        onView(withId(R.id.rvDataUsageList)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                3,
+                clickOnViewChild(R.id.tvDataUsageYear)
+            )
+        )
 
         onView(withId(R.id.rvDataUsageList))
             .check(matches(atPosition(10, hasDescendant(withText("2018")))))
@@ -65,7 +76,6 @@ class MainActivityTest {
     }
 
     private fun atPosition(position: Int, @NonNull itemMatcher: Matcher<View?>): Matcher<View?> {
-        checkNotNull(itemMatcher)
         return object : BoundedMatcher<View?, RecyclerView?>(RecyclerView::class.java) {
             override fun describeTo(description: Description) {
                 description.appendText("has item at position $position: ")
@@ -87,6 +97,7 @@ class MainActivityTest {
 
         override fun getDescription() = "Click on a child view with specified id."
 
-        override fun perform(uiController: UiController, view: View) = click().perform(uiController, view.findViewById<View>(viewId))
+        override fun perform(uiController: UiController, view: View) =
+            click().perform(uiController, view.findViewById(viewId))
     }
 }
