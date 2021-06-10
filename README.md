@@ -2,7 +2,7 @@
 ## Functionality
 The app displays the data usage from year 2008 to 2018.
 
-###Project Structure
+### Project Structure
  #### data 
  local - Contains local database implementations
  remote - Contains api implementations
