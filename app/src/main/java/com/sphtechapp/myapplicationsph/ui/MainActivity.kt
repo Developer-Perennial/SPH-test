@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.sphtechapp.myapplicationsph.R
 import com.sphtechapp.myapplicationsph.data.remote.responses.RecordsData
 import com.sphtechapp.myapplicationsph.databinding.ActivityMainBinding
-import com.sphtechapp.myapplicationsph.databinding.FragmentDataUsageBinding
 import com.sphtechapp.myapplicationsph.other.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 
