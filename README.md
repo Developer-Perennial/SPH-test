@@ -21,6 +21,9 @@ Each Repository is tested using local unit tests with mock web service and mock 
 ### Webservice Tests
 The project uses MockWebServer project to test REST api interactions.
 
+### Test Coverage
+![Alt text](test_coverage.jpg?raw=true "Test Coverage")
+
 ### Libraries
 Android Support Library
 Android Architecture Components
