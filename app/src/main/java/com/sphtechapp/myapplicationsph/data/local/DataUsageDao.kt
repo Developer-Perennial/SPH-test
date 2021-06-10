@@ -1,6 +1,5 @@
 package com.sphtechapp.myapplicationsph.data.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.sphtechapp.myapplicationsph.data.remote.responses.RecordsData
 
